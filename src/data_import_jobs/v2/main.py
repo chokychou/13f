@@ -11,7 +11,6 @@ db_configs = DbConfig(
 )
 
 def import_filing_fn(filing):
-    # {'external_id': '000109544924000066', 'company_name': '13F-HR - Unconventional Investor, LLC (0001910387)', 'form_type': '13F-HR', 'cik': '0001910387', 'date_filed': '2024-08-14', 'directory_url': 'https://www.sec.gov/Archives/edgar/data/1910387/000109544924000066'}
     sql_workflow.run(db_configs,
         "src/data_import_jobs/v2/insert_form_13f_row_wfl.pbtxt",
         tuple(filing.values())
