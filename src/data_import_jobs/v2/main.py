@@ -12,23 +12,17 @@ db_configs = DbConfig(
 
 def import_filing_fn(filing):
     # {'external_id': '000109544924000066', 'company_name': '13F-HR - Unconventional Investor, LLC (0001910387)', 'form_type': '13F-HR', 'cik': '0001910387', 'date_filed': '2024-08-14', 'directory_url': 'https://www.sec.gov/Archives/edgar/data/1910387/000109544924000066'}
-    options = (
-        "000109544924000066",
-        "13F-HR - Unconventional Investor, LLC (0001910387)",
-        "13F-HR",
-        "0001910387",
-        "2024-08-14",
-        "https://www.sec.gov/Archives/edgar/data/1910387/000109544924000066"
+    sql_workflow.run(db_configs,
+        "src/data_import_jobs/v2/insert_form_13f_row_wfl.pbtxt",
+        tuple(filing.values())
     )
-    sql_workflow.run(db_configs, "src/data_import_jobs/v2/insert_form_13f_row_wfl.pbtxt", options)
 
 def run():
     print("Getting latest 13F filings...")
-    # Query latest 13F list.
-    latest_filings = latest_thirteen_f_filings()
+    # Query latest 13F list and write to db
+    for filing in latest_thirteen_f_filings():
+        import_filing_fn(filing)
 
-    import_filing_fn(latest_filings[0])
-    # map(import_filing_fn, latest_thirteen_f_filings())
 
 if __name__ == "__main__":
     run()

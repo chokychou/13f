@@ -47,9 +47,13 @@ def connect_to_db(host, database, user, password, port):
 def execute_query(conn, query, options=()):
     """Executes a SQL query."""
     cursor = conn.cursor()
-    cursor.execute(query, options)
-    conn.commit()
-    cursor.close()
+    try:
+        cursor.execute(query, options)
+        conn.commit()
+    except psycopg2.errors.UniqueViolation as e:
+        print(f"Skipping duplicate entry: {e}")
+    finally:
+        cursor.close()
 
 
 def close_connection(conn):
