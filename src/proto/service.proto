@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option objc_class_prefix = "HLW";
+
+package sample;
+
+// The sample service definition.
+service IssuerGraphService {
+    // Sends a transaction
+    rpc GetIssuerStats (IssuerStatsRequest) returns (IssuerStatsResponse) {}
+    rpc MatchIssuers (MatchIssuersRequest) returns (MatchIssuersResponse) {}
+}
+
+message MatchIssuersRequest {
+    string text_to_match = 1;
+}
+
+message MatchIssuersResponse {
+    message CusipCandidate {
+        string cusip = 1;
+        string name = 2;
+    }
+    repeated CusipCandidate cusip_candidate = 1;
+}
+
+// The request to process transaction.
+message IssuerStatsRequest {
+    string cusip = 1;
+
+    enum PrbuiltGraph {
+        UNDEFINED = 0;
+        PULL_ALL_STATS = 1;
+    }
+    PrbuiltGraph prebuilt_graph = 2;
+}
+
+// The response to process transaction.
+message IssuerStatsResponse {
+    // Date of the last update
+    string cusip = 1;
+    string name = 10;
+    int64 last_update_timestamp = 2;
+    IssuerStats issuer_stats = 3;
+}
+
+message IssuerStats {
+    repeated OwnershipByInstruments owner_lists = 1;
+    repeated PerInstrumentOwnershipHistory owner_history = 2;
+}
+
+// Issuer owned by financial instruments. For example:
+//   BABA: Vanguard 100
+//   BABA: Blackrock 100
+message OwnershipByInstruments {
+    // // raw
+    string cik = 1;
+    string name = 10;
+    int64 shrs_prn_amt = 2;
+    int64 value = 3;
+
+    // // computed
+    // ownerhip percentage by the financial instrument
+    double own_pct = 12; 
+}
+
+// Issuer historically owned by one final instument. For example
+//   BABA: Vanguard 100
+//   BABA: Blackrock 100
+message PerInstrumentOwnershipHistory {
+    string cik = 1;
+    string name = 10;
+    string date_filed = 2;
+    string directory_url = 3;
+    int64 shrs_prn_amt = 4;
+    int64 value = 5;
+}

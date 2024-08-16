@@ -1,0 +1,9 @@
+name: "Example workflow"
+sql_script {
+  name: "schema"
+  path: "src/storage/schema.sql"
+}
+sql_script {
+  name: "tables"
+  path: "src/storage/tables.sql"
+}

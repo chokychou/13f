@@ -1,0 +1,15 @@
+Cache server
+```
+bazel run //src/cache_server:server
+```
+
+webapp
+```
+npm --prefix ./src/webapp run dev
+```
+
+data import jobs
+```
+docker build -t latest -f docker/data_import_jobs/dev/Dockerfile .
+docker run --rm --name data_import_jobs latest
+```

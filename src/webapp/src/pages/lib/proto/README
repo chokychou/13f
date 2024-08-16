@@ -1,0 +1,7 @@
+To generate grpc js
+```
+cd 13
+grpc_tools_node_protoc -I=. --proto_path=src/proto service.proto \
+ --js_out=import_style=commonjs,binary:src/webapp/src/pages/lib/proto  \
+ --grpc_out=grpc_js:src/webapp/src/pages/lib/proto
+```

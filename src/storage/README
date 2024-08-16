@@ -1,0 +1,7 @@
+There are 3 commands you need to know once PostgreSQL is installed:
+
+* `sudo service postgresql status` for checking the status of your database.
+* `sudo service postgresql start` to start running your database.
+* `sudo service postgresql stop` to stop running your database.
+
+Connect to database `sudo -u postgres psql`

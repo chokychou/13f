@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option objc_class_prefix = "HLW";
+
+package sample;
+
+
+message SqlScriptRule {
+    string name = 1;
+    string path = 2;
+}
+
+message SimpleWorkFlow {
+    string name = 1;
+    repeated SqlScriptRule sql_script = 2;
+}
+

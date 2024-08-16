@@ -1,0 +1,9 @@
+name: "Example workflow"
+sql_script {
+  name: "script1"
+  path: "src/tools/protobuf_sql_workflow/examples/schema.sql"
+}
+sql_script {
+  name: "script2"
+  path: "src/tools/protobuf_sql_workflow/examples/tables.sql"
+}

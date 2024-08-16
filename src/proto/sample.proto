@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option objc_class_prefix = "HLW";
+
+package sample;
+
+message Samples {
+    repeated Sample sample = 1;
+}
+
+message Sample {
+    string external_id = 7;
+    // A Central Index Key or CIK number. It is used to identify the filings of a company, person, or entity in several online databases, including Compustat in WRDS and in EDGAR.
+    string cik = 1;
+    string date_filed = 2;
+    string filing_id = 3;
+    string directory_url = 6;
+    enum FormType {
+        UNDEFINED = 0;
+        _13F_HR = 1;
+    }
+    FormType form_type = 4;
+    repeated InfoTable info_table = 5;
+}
+
+// Convert INFORMATION TABLE to proto
+// http://www.sec.gov/edgar/document/thirteenf/informationtable
+message InfoTable {
+    string name_of_issuer = 4;
+    // Column 3 - Financial instrument unique ID.
+    string cusip = 1;
+    // Column 4 - value (to the nearest dollar)	
+    int64 value = 2;
+    // Column 5 - Number of shares OR priciple amount.
+    ShrsPrnAmt shrs_prn_amt = 3;
+}
+
+// Column 5 - Number of shares OR priciple amount.
+message ShrsPrnAmt {
+    int64 number = 1;
+    enum Type {
+        UNDEFINED = 0;
+        PRN = 1;
+        SHRS = 2;
+    }
+    Type type = 2;
+}
+
+message Issuer {
+    string cusip = 1;
+    // Key is cik
+    map<string, IssueHistory> issue_history = 4;
+}
+
+message IssueHistory {
+    string cik = 1;
+    string date_filed = 2;
+    string filing_id = 3;
+    int64 shrs_prn_amt = 4;
+    int64 value = 5;
+}
+
+/*******************************************************
+Stores key (cik, cusip) to name (financial instrument) mapping. Used in MatchIssuersRequest.
+
+{
+    key: 02079K107
+    name: ALPHABET C
+}
+*******************************************************/
+message CacheMapping {
+    string key = 1;
+    string name = 2;
+    string date = 3;
+}
+
+message CacheMappings {
+    map<string, CacheMapping> cache_mapping = 4;
+}
