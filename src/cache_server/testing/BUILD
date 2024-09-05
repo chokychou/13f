@@ -23,3 +23,15 @@ cc_binary(
         "//src/proto:service_cc_grpc",
     ],
 )
+
+cc_binary(
+    name = "mock_client",
+    srcs = ["mock_client.cc"],
+    defines = ["BAZEL_BUILD"],
+    deps = [
+        "//src/proto:service_cc_grpc",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/flags:parse",
+        '@com_github_grpc_grpc//:grpc++',
+    ],
+)
