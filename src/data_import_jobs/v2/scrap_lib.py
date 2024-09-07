@@ -137,6 +137,8 @@ def latest_thirteen_f_filings(
             company_name = title_regex.search(
                 soup.select_one("title", features="xml").text
             ).group()
+            
+            xml_urls = construct_xml_urls(directory_url)
             results.append(
                 {
                     "external_id": external_id,
@@ -145,6 +147,10 @@ def latest_thirteen_f_filings(
                     "cik": cik,
                     "date_filed": filing_date.strftime("%Y-%m-%d"),
                     "directory_url": directory_url,
+                    "full_submission_url": extract_info_table_url(xml_urls),
+                    "info_table": get_holdings_from_13f_xml_as_dict(
+                        full_submission_url
+                    ),
                 }
             )
 
@@ -274,27 +280,3 @@ def get_holdings_from_13f_xml_as_dict(xml_url):
         return remove_prefix_from_keys(xml_dict)
     except:
         return ""
-
-
-def process_latest_filings(latest_filings):
-    """
-    This function processes each latest filing in a list by constructing XML URLs,
-    extracting full submission URLs, and fetching meta data from XML.
-
-    Args:
-        latest_filings (List[Dict]): A list of dictionaries containing information about the latest filings.
-
-    Returns:
-        None (Modifies the 'latest_filings' list in-place): Adds two new keys to each dictionary:
-            - 'full_submission_url': The extracted full submission URL.
-            - 'meta_data': A dictionary containing the holdings data fetched from the 13F XML.
-
-    """
-    xml_urls = construct_xml_urls(latest_filings["directory_url"])
-    full_submission_url = extract_info_table_url(xml_urls)
-    latest_filings["full_submission_url"] = full_submission_url
-    latest_filings["info_table"] = get_holdings_from_13f_xml_as_dict(
-        full_submission_url
-    )
-    return latest_filings
-

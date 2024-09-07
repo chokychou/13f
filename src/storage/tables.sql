@@ -1,3 +1,4 @@
+--  TODO: Change name to FORM_13F_METADATA
 CREATE TABLE SEC_FILINGS.FORM_13F (
     external_id varchar(255) NOT NULL,
     company_name varchar(255),

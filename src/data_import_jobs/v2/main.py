@@ -13,7 +13,22 @@ db_configs = DbConfig(
 def import_filing_fn(filing):
     sql_workflow.run(db_configs,
         "src/data_import_jobs/v2/insert_form_13f_row_wfl.pbtxt",
-        tuple(filing.values())
+        [
+            (
+                filing["external_id"],
+                filing["company_name"], 
+                filing["form_type"], 
+                filing["cik"], 
+                filing["date_filed"], 
+                filing["directory_url"], 
+            ),
+            (
+                filing["external_id"],
+                # TODO: Fix this info_table below
+                # filing["info_table"],
+                filing["full_submission_url"], 
+            )
+        ]
     )
 
 def run():
