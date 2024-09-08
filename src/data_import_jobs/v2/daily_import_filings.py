@@ -45,9 +45,7 @@ def process_cik_metadata_fn(filing):
 
 def run():
     print("Getting latest 13F filings...")
-    for filing in latest_thirteen_f_filings(
-        day_trace_back = 2
-    ):
+    for filing in latest_thirteen_f_filings():
         # Query latest 13F list, and write metadata to db
         import_filing_fn(filing)
         # Process cik metadata from filings

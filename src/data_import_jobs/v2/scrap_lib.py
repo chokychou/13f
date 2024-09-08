@@ -15,7 +15,6 @@ from dataclasses import dataclass
 
 BASE_URL = "https://www.sec.gov"
 EXPECTED_COL_NAMES = ["cik", "company_name", "form_type", "date_filed", "filename"]
-THIRTEEN_F_FORM_TYPES = ["13F-HR", "13F-HR/A"]
 
 session = requests.Session()
 headers = {
