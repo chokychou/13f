@@ -23,3 +23,23 @@ CREATE TABLE SEC_FILINGS.CIK_METADATA (
     last_updated_date DATE,
     PRIMARY KEY (cik)
 );
+
+CREATE TABLE SEC_FILINGS.CUSIP_METADATA (
+    cusip varchar(255),
+    name varchar(255),
+    ownnership_by_instrument TEXT, -- TODO: this should be computed offline
+    last_updated_date DATE,
+    PRIMARY KEY (cusip)
+);
+
+CREATE TABLE SEC_FILINGS.CUSIP_OWNERSHIP (
+    cusip varchar(255) NOT NULL,
+    cik varchar(255) NOT NULL,
+    type varchar(255),
+    number INT,
+    value FLOAT,
+    last_updated_date DATE,
+    CONSTRAINT fk_cusip_ownership FOREIGN KEY (cusip) REFERENCES SEC_FILINGS.CUSIP_METADATA (cusip),
+    CONSTRAINT fk_cusip_ownership_cik FOREIGN KEY (cik) REFERENCES SEC_FILINGS.CIK_METADATA (cik),
+    PRIMARY KEY (cusip, cik)
+);

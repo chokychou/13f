@@ -25,7 +25,8 @@ py_binary(
     data = [
         ":sql_scripts",
         "insert_form_13f_row_wfl.pbtxt",
-        "insert_cik_metadata.pbtxt",
+        "insert_cik_metadata_wfl.pbtxt",
+        "insert_cusip_row_wfl.pbtxt",
     ],
     deps = [
         ":scrap_lib",

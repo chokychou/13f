@@ -23,7 +23,6 @@ def import_filing_fn(filing):
             ),
             (
                 filing["external_id"],
-                # TODO: Fix this info_table below
                 parse_info_table_as_text(filing["info_table"]),
                 filing["full_submission_url"], 
             )
@@ -32,7 +31,7 @@ def import_filing_fn(filing):
 
 def process_cik_metadata_fn(filing):
     sql_workflow.run(db_configs,
-        "src/data_import_jobs/v2/insert_cik_metadata.pbtxt",
+        "src/data_import_jobs/v2/insert_cik_metadata_wfl.pbtxt",
         [
             (
                 filing["cik"],
@@ -42,14 +41,38 @@ def process_cik_metadata_fn(filing):
         ]
     )
 
+# TODO: This part is going to be ungly because the sql engine does not support return function.
+def temp_process_cusip_ownership_per_filing(filing):
+    sample = sample_pb2.Sample()
+    sample.ParseFromString(parse_info_table_as_text(filing["info_table"]))
+    for it in sample.info_table:
+        sql_workflow.run(db_configs,
+            "src/data_import_jobs/v2/insert_cusip_row_wfl.pbtxt",
+            [
+                (
+                    it.cusip,
+                    it.name_of_issuer, 
+                ),
+                (
+                    it.cusip,
+                    filing["cik"],
+                    # TODO: replace with name. Maybe sample_pb2.ShrsPrnAmt.Name(it.shrs_prn_amt.type),
+                    it.shrs_prn_amt.type,
+                    it.shrs_prn_amt.number,
+                    it.value,
+                    filing["date_filed"], 
+                )
+            ]
+        )
 
 def run():
     print("Getting latest 13F filings...")
-    for filing in latest_thirteen_f_filings():
+    for filing in latest_thirteen_f_filings(2):
         # Query latest 13F list, and write metadata to db
         import_filing_fn(filing)
         # Process cik metadata from filings
         process_cik_metadata_fn(filing)
+        temp_process_cusip_ownership_per_filing(filing)
 
 
 if __name__ == "__main__":
