@@ -139,6 +139,8 @@ def latest_thirteen_f_filings(
             ).group()
             
             xml_urls = construct_xml_urls(directory_url)
+            full_submission_url = extract_primary_doc_url(xml_urls)
+
             results.append(
                 {
                     "external_id": external_id,
@@ -147,7 +149,7 @@ def latest_thirteen_f_filings(
                     "cik": cik,
                     "date_filed": filing_date.strftime("%Y-%m-%d"),
                     "directory_url": directory_url,
-                    "full_submission_url": extract_info_table_url(xml_urls),
+                    "full_submission_url": full_submission_url,
                     "info_table": get_holdings_from_13f_xml_as_dict(
                         full_submission_url
                     ),

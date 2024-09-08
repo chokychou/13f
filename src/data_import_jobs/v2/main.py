@@ -16,7 +16,6 @@ def import_filing_fn(filing):
         [
             (
                 filing["external_id"],
-                filing["company_name"], 
                 filing["form_type"], 
                 filing["cik"], 
                 filing["date_filed"], 
@@ -31,11 +30,26 @@ def import_filing_fn(filing):
         ]
     )
 
+def process_cik_metadata_fn(filing):
+        sql_workflow.run(db_configs,
+        "src/data_import_jobs/v2/insert_cik_metadata.pbtxt",
+        [
+            (
+                filing["cik"],
+                filing["company_name"], 
+                filing["date_filed"], 
+            )
+        ]
+    )
+
+
 def run():
     print("Getting latest 13F filings...")
-    # Query latest 13F list and write to db
     for filing in latest_thirteen_f_filings():
+        # Query latest 13F list, and write metadata to db
         import_filing_fn(filing)
+        # Process cik metadata from filings
+        process_cik_metadata_fn(filing)
 
 
 if __name__ == "__main__":
