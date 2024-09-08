@@ -1,0 +1,13 @@
+name: "Example workflow"
+sql_script {
+  name: "drop schema"
+  path: "src/storage/table_resetter/drop_schema.sql"
+}
+sql_script {
+  name: "create schema"
+  path: "src/storage/schema.sql"
+}
+sql_script {
+  name: "create tables"
+  path: "src/storage/tables.sql"
+}

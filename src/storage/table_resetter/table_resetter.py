@@ -1,3 +1,7 @@
+""" Drop and create schema and tables.
+DO NOT USE IN PROD.
+"""
+
 import src.tools.protobuf_sql_workflow.workflow as sql_workflow
 from src.tools.protobuf_sql_workflow.sql_engine import DbConfig
 
@@ -9,4 +13,4 @@ if __name__ == "__main__":
         password="test_pw",  # Filled in from --db_password
         port="5432"  # Filled in from --db_port
     )
-    sql_workflow.run(db_configs, "src/storage/table_updater/workflow.pbtxt")
+    sql_workflow.run(db_configs, "src/storage/table_resetter/workflow.pbtxt", options=[(),(),()])
