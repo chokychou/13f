@@ -20,8 +20,8 @@ py_library(
 )
 
 py_binary(
-    name = "main",
-    srcs = ["main.py"],
+    name = "daily_import_filings",
+    srcs = ["daily_import_filings.py"],
     data = [
         ":sql_scripts",
         "insert_form_13f_row_wfl.pbtxt",
