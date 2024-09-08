@@ -1,9 +1,9 @@
 name: "row insertion workflow"
 sql_script {
-  name: "insert form metadata"
+  name: "executing insert_form_13f_row"
   path: "src/data_import_jobs/v2/insert_form_13f_row.sql"
 }
 sql_script {
-  name: "insert content"
+  name: "executing insert_form_13f_content"
   path: "src/data_import_jobs/v2/insert_form_13f_content.sql"
 }

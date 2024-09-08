@@ -96,12 +96,13 @@ def organize_forms_by_types(
     return thirteen_fs
 
 def latest_thirteen_f_filings(
-    filed_since: str = (datetime.date.today() - datetime.timedelta(days=1)).strftime(
-        "%Y-%m-%d"
-    ),
+    day_trace_back: int = 1,
     per_page: int = 100,
     max_pages: int = 100,
 ) -> List[Dict]:
+    filed_since = (datetime.date.today() - datetime.timedelta(days=day_trace_back)).strftime(
+        "%Y-%m-%d"
+    )
     url = f"{BASE_URL}/cgi-bin/browse-edgar"
 
     query_params = {
@@ -140,6 +141,7 @@ def latest_thirteen_f_filings(
             
             xml_urls = construct_xml_urls(directory_url)
             full_submission_url = extract_primary_doc_url(xml_urls)
+            info_table_url = extract_info_table_url(xml_urls)
 
             results.append(
                 {
@@ -151,8 +153,9 @@ def latest_thirteen_f_filings(
                     "directory_url": directory_url,
                     "full_submission_url": full_submission_url,
                     "info_table": get_holdings_from_13f_xml_as_dict(
-                        full_submission_url
+                        info_table_url
                     ),
+                    "info_table_url": info_table_url,
                 }
             )
 
@@ -282,3 +285,46 @@ def get_holdings_from_13f_xml_as_dict(xml_url):
         return remove_prefix_from_keys(xml_dict)
     except:
         return ""
+
+def parse_info_table_as_text(info_table):
+    def shrs_prn_amt_builder(raw_shrs_prn_amt):
+        out_shrs_prn_amt = sample_pb2.ShrsPrnAmt()
+        out_shrs_prn_amt.number = int(raw_shrs_prn_amt["sshPrnamt"])
+
+        if raw_shrs_prn_amt["sshPrnamtType"] in "SHRS":
+            out_shrs_prn_amt.type = sample_pb2.ShrsPrnAmt().SHRS
+
+        if raw_shrs_prn_amt["sshPrnamtType"] in "PRN":
+            out_shrs_prn_amt.type = sample_pb2.ShrsPrnAmt().PRN
+
+        return out_shrs_prn_amt
+
+    def info_table_builder(out_info_table, raw_info_table):
+        try:
+            data_sets = raw_info_table["informationTable"]["infoTable"]
+        except:
+            print(raw_info_table)
+            print("we have an error")
+            return 0
+
+        if type(data_sets) is not list:
+            data_sets = [data_sets]
+
+        for data in data_sets:
+            info_table = sample_pb2.InfoTable()
+            info_table.name_of_issuer = data["nameOfIssuer"]
+            info_table.cusip = data["cusip"]
+            info_table.value = int(data["value"])
+            info_table.shrs_prn_amt.MergeFrom(
+                shrs_prn_amt_builder(data["shrsOrPrnAmt"])
+            )
+            out_info_table.append(info_table)
+
+        return 1
+
+
+    sample = sample_pb2.Sample()
+    # TODO: Check info_table_builder() status
+    info_table_builder(sample.info_table, info_table)
+
+    return sample.SerializeToString()
