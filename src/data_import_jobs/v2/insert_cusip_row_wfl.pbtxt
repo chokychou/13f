@@ -1,0 +1,9 @@
+name: "insert_cusip_row_wfl"
+sql_script {
+  name: "executing update_cusip_metadata"
+  path: "src/data_import_jobs/v2/update_cusip_metadata.sql"
+}
+sql_script {
+  name: "executing insert_form_13f_content"
+  path: "src/data_import_jobs/v2/update_cusip_ownership_by_cik.sql"
+}

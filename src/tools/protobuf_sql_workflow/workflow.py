@@ -21,17 +21,17 @@ def parse_sql_script(file_path) -> str:
         return f.read()
     return ""
 
-def sql_executor(db_configs, script, options=()):
+def sql_executor(db_configs, script, options):
     sql_engine = SqlEngine(db_configs)
     sql_engine.execute_query(script, options)
 
 
-def run(db_configs, wfl_file_path, options=()):
+def run(db_configs, wfl_file_path, options):
     workflow = parse_sql_workflow(wfl_file_path)
     if workflow:
         print(f"Workflow ({workflow.name}) parsed successfully!")
-        for script in workflow.sql_script:
+        for script, option in zip(workflow.sql_script, options):
             print("Executing script:" + script.name)
-            sql_executor(db_configs, parse_sql_script(script.path), options)
+            sql_executor(db_configs, parse_sql_script(script.path), option)
     else:
         print("Failed to parse workflow.")
