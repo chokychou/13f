@@ -28,7 +28,7 @@ class DBUtilsTest(unittest.TestCase):
         conn = mock_connect.return_value
         cursor = conn.cursor.return_value
         execute_query(conn, "SELECT * FROM users")
-        cursor.execute.assert_called_once_with("SELECT * FROM users")
+        cursor.execute.assert_called_once_with("SELECT * FROM users", ())
         conn.commit.assert_called_once()
 
     @patch("psycopg2.connect")
