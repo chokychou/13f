@@ -32,6 +32,9 @@ def run(db_configs, wfl_file_path, options, callback=None):
     workflow = parse_sql_workflow(wfl_file_path)
     if workflow:
         print(f"Workflow ({workflow.name}) parsed successfully!")
+        if len(workflow.sql_script) != len(options):
+            print("Error: Scripts length and options length mismatch!")
+            return
         for script, option in zip(workflow.sql_script, options):
             print("Executing script:" + script.name)
             sql_executor(db_configs, parse_sql_script(script.path), option, callback)
