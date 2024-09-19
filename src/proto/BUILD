@@ -39,3 +39,13 @@ py_proto_library(
     name = "sample_py_proto",
     deps = [":sample_proto"],
 )
+
+proto_library(
+    name = "storage_service",
+    srcs = ["storage_service.proto"],
+)
+
+py_proto_library(
+    name = "storage_service_py_proto",
+    deps = [":storage_service"],
+)
