@@ -44,8 +44,8 @@ export default function SearchBar({ width, onSearchTermChange }) {
         .then((res) => res.json())
         .then((data) => {
           // Validate the data
-          if (data.result && data.result.cusipCandidateList) {
-            setMatchedTerm(data.result.cusipCandidateList);
+          if (data.result) {
+            setMatchedTerm(data.result);
           } else {
             console.error('Invalid match_issuer response: ', data);
             // Handle the error appropriately (e.g., display an error message)

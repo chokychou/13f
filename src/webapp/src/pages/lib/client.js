@@ -1,36 +1,25 @@
-var messages = require('./proto/service_pb');
-var services = require('./proto/service_grpc_pb');
-
-var grpc = require('@grpc/grpc-js');
+import pg from 'pg'
+const { Client } = pg
 
 export default async function RequestIssuerStats(cusip, graph = 1, target = 'localhost:50051') {
     if (!cusip) {
         throw new Error('Cusip is required');
     }
 
-    const client = new services.IssuerGraphServiceClient(target,
-        grpc.credentials.createInsecure());
+    const client = new Client({
+        host: "127.0.0.1",  
+        database: "postgres",  
+        user: "test_user", 
+        password: "test_pw",  
+        port: "5432"
+    });
 
-    const request = new messages.IssuerStatsRequest();
-    request.setCusip(cusip);
-    request.setPrebuiltGraph(graph);
+    await client.connect();
+ 
+    const result = await client.query('SELECT * FROM SEC_FILINGS.CUSIP_OWNERSHIP WHERE cusip = $1', [cusip]);
 
-    try {
-        const response = await new Promise((resolve, reject) => {
-            client.getIssuerStats(request, (err, res) => {
-                if (err) {
-                    console.error("Probably the reqested graph isn't implemented.");
-                    reject(err);
-                } else {
-                    resolve(res);
-                }
-            });
-        });
+    await client.end();
 
-        return response.toObject();
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+    return result.rows;
 }
-
+ 

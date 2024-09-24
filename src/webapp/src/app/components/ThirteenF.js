@@ -29,11 +29,12 @@ export default function ThirteenF({ cusip }) {
 
     var rows = [];
     try {
-        rows = data.result.issuerStats.ownerListsList.map((owner, index) => ({
+        console.log(data.result)
+        rows = data.result.map((owner, index) => ({
           key: index.toString(), 
           cik: owner.cik,
-          cik_name: owner.name,
-          shares_held: owner.shrsPrnAmt,
+          cik_name: "TODO",
+          shares_held: owner.number,
           value: owner.value,
         }));
       } catch (error) {
