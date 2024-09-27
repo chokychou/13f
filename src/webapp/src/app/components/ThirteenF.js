@@ -1,27 +1,10 @@
 import React from "react";
-import { useState, useEffect } from 'react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue } from "@nextui-org/react";
 
-function GetThirteenF(cusip) {
-    const [data, setData] = useState(null)
-
-    useEffect(() => {
-        fetch('/api/get_form?cusip=' + cusip)
-            .then((res) => res.json())
-            .then((data) => {
-                setData(data)
-            })
-    }, [cusip]) // Add cusip to the dependency array
-    return data;
-}
-
-export default function ThirteenF({ cusip }) {
-
-    if (!cusip) {
+export default function ThirteenF({ data }) {
+    if (!data) {
         return <p>Invalid cusip / stock</p>
     }
-
-    var data = GetThirteenF(cusip)
 
     if (!data) {
         return <p>Loading...</p>
@@ -29,8 +12,7 @@ export default function ThirteenF({ cusip }) {
 
     var rows = [];
     try {
-        console.log(data.result)
-        rows = data.result.map((owner, index) => ({
+        rows = data.map((owner, index) => ({
           key: index.toString(), 
           cik: owner.cik,
           cik_name: "TODO",
