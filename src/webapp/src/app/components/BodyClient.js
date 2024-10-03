@@ -50,7 +50,6 @@ export default function BodyClient({ width: searchbarWidth, selectedTab /* Choos
   useEffect(() => {
     const fetchData = async () => {
       if (selectedTab === tabs._13_filings && searchTerm) {
-        console.log("Fetching 13F data");
         const res = await fetch('/api/get_form?cusip=' + searchTerm);
         const data = await res.json();
         if (data.result)
