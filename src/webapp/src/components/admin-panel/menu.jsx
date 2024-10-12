@@ -1,6 +1,6 @@
 "use client";;
 import Link from "next/link";
-import { Ellipsis, LogOut } from "lucide-react";
+import { Ellipsis, Lollipop } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -16,10 +16,16 @@ import {
 } from "@/components/ui/tooltip";
 
 export function Menu({
-  isOpen
+  isOpen, selectedTabCallback
 }) {
   const pathname = usePathname();
   const menuList = getMenuList(pathname);
+
+  const handleTabClick = (tabName) => {
+    if (selectedTabCallback) {
+      selectedTabCallback(tabName);
+    }
+  };
 
   return (
     (<ScrollArea className="[&>div>div[style]]:!block">
@@ -64,7 +70,8 @@ export function Menu({
                                 : "ghost"
                             }
                             className="w-full justify-start h-10 mb-1"
-                            asChild>
+                            asChild
+                            onClick={() => handleTabClick(label)}>
                             <Link href={href}>
                               <span className={cn(isOpen === false ? "" : "mr-4")}>
                                 <Icon size={18} />
@@ -111,16 +118,12 @@ export function Menu({
                     variant="outline"
                     className="w-full justify-center h-10 mt-5">
                     <span className={cn(isOpen === false ? "" : "mr-4")}>
-                      <LogOut size={18} />
+                      <Lollipop size={18} />
                     </span>
-                    <p
-                      className={cn("whitespace-nowrap", isOpen === false ? "opacity-0 hidden" : "opacity-100")}>
-                      Sign out
-                    </p>
                   </Button>
                 </TooltipTrigger>
                 {isOpen === false && (
-                  <TooltipContent side="right">Sign out</TooltipContent>
+                  <TooltipContent side="right"></TooltipContent>
                 )}
               </Tooltip>
             </TooltipProvider>

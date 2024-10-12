@@ -1,6 +1,6 @@
 class Tabs {
     constructor() {
-        this._13_filings = "13 Filings";
+        this._13_filings = "Institution Ownership";
     }
 }
 

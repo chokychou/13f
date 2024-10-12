@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react'
-import { tabs } from "./tab_list"
+import { tabs } from "../../lib/tab_list"
 import ThirteenF from "./ThirteenF";
 import SearchForm from "./SearchForm";
 
