@@ -43,11 +43,7 @@ export default function ThirteenF({ data }) {
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
     if (!data) {
-        return <p>Invalid cusip / stock</p>;
-    }
-
-    if (!data) {
-        return <p>Loading...</p>;
+        return;
     }
 
     try {
@@ -86,8 +82,13 @@ export default function ThirteenF({ data }) {
     ];
 
     return (
-        <>
-            <Table aria-label="Example table with dynamic content">
+        <div className="flex flex-col gap-3 p-3">
+            <Table
+                aria-label="Example table with dynamic content"
+                selectionMode="single"
+                defaultSelectedKeys={["2"]}
+                className="text-sm border rounded-lg"
+            >
                 <TableHeader columns={columns}>
                     {(column) => (
                         <TableColumn key={column.key}>
@@ -123,6 +124,6 @@ export default function ThirteenF({ data }) {
                     )}
                 </TableBody>
             </Table>
-        </>
+        </div>
     );
 }

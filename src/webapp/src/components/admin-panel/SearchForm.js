@@ -49,8 +49,8 @@ export default function SearchForm({ searchCallback }) {
     }, [searchTerm]);
 
     return (
-        <div className="relative w-full">
-            <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+        <div className="relative w-full p-5">
+            <Command className={`bg-white border shadow-md md:min-w-[450px] ${showDropdown ? 'rounded-lg' : 'rounded-full'}`}>
                 <CommandInput
                     placeholder="Type a command or search..."
                     className="w-full text-sm rounded-lg "
