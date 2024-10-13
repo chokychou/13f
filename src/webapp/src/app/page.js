@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import BodyClient from "./components/BodyClient"
-import { tabs } from "../lib/tab_list"
+import BodyClient from "../components/admin-panel/BodyClient"
 import { Sidebar } from "../components/admin-panel/sidebar";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/hooks/use-store";
