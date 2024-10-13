@@ -10,11 +10,9 @@ import {
 } from "@nextui-org/react";
 
 function handleSortHelper(a, b, key) {
-    // Handle numeric sorting for 'shares_held' and 'value'
     if (key === "shares_held" || key === "value") {
         return a[key] - b[key];
     } else {
-        // Handle string sorting for other keys
         return a[key].localeCompare(b[key]);
     }
 }

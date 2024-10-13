@@ -16,11 +16,13 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 
 export function Menu({ isOpen, selectedTabCallback }) {
   const pathname = usePathname();
   const menuList = getMenuList(pathname);
   const [activeTab, setActiveTab] = useState(null);
+  const { theme, setTheme } = useTheme();
 
   const handleTabClick = (tabName) => {
     if (selectedTabCallback) {
@@ -125,11 +127,18 @@ export function Menu({ isOpen, selectedTabCallback }) {
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => {}}
+                    onClick={() =>
+                      setTheme(theme === "dark" ? "light" : "dark")
+                    }
                     variant="outline"
-                    className="w-full justify-center h-10 mt-5">
+                    className="w-full justify-center h-10 mt-5"
+                  >
                     <span className={cn(isOpen === false ? "" : "mr-4")}>
-                      <MoonIcon size={18} />
+                      {theme === "dark" ? (
+                        <MoonIcon size={18} />
+                      ) : (
+                        <SunIcon size={18} />
+                      )}
                     </span>
                   </Button>
                 </TooltipTrigger>
