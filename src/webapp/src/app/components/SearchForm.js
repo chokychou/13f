@@ -1,4 +1,4 @@
-import Button from 'react-bootstrap/Button';
+import { Button } from "@/components/ui/button";
 
 
 export default function SearchForm({ searchCallback, setShowDropdown }) {
@@ -13,7 +13,7 @@ export default function SearchForm({ searchCallback, setShowDropdown }) {
     return (
         <form className="w-full" onSubmit={handleSubmit}>
             <div className="relative">
-                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <svg
                         className="w-4 h-4 text-gray-500 dark:text-gray-400"
                         aria-hidden="true"
@@ -29,7 +29,7 @@ export default function SearchForm({ searchCallback, setShowDropdown }) {
                         />
                     </svg>
                 </div>
-                <input
+            <input
                     type="search"
                     id="default-search"
                     // Assign the input element to the reference
@@ -39,12 +39,8 @@ export default function SearchForm({ searchCallback, setShowDropdown }) {
                     required
                     onClick={() => setShowDropdown(true)} // Show dropdown on click
                 />
-                <Button
-                    type="submit"
-                    className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                    Search
-                </Button>
+                <Button type="submit" className="text-white absolute end-2.5 bottom-2.5 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:hover:bg-blue-700">Search</Button>
+
             </div>
         </form>
     );
