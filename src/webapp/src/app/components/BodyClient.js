@@ -13,8 +13,7 @@ function TabContent({ selectedTab, data }) {
   );
 }
 
-export default function BodyClient({ width: searchbarWidth, selectedTab /* Choose  */ }) {
-  var styles = { width: `calc(100% - ${searchbarWidth})`, position: "relative", left: searchbarWidth, top: 0, height: "100vh" };
+export default function BodyClient({ selectedTab /* Choose  */ }) {
   const [searchTerm, setSearchTerm] = useState(""); // State to store search text
   const [matchedTerm, setMatchedTerm] = useState({});
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
@@ -61,7 +60,7 @@ export default function BodyClient({ width: searchbarWidth, selectedTab /* Choos
 
   return (
     <>
-      <div style={styles} className="flex min-h-screen flex-col p-5">
+      <div className="flex min-h-screen flex-col p-5">
         <SearchForm searchCallback={handleSearchCallback} setShowDropdown={setShowDropdown} />
 
         {showDropdown && ( // Conditional rendering of the dropdown

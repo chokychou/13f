@@ -1,7 +1,8 @@
-"use client";;
+"use client";
 import Link from "next/link";
-import { Ellipsis, Lollipop } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
 import { cn } from "@/lib/utils";
 import { getMenuList } from "@/lib/menu-list";
@@ -12,31 +13,30 @@ import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-  TooltipProvider
+  TooltipProvider,
 } from "@/components/ui/tooltip";
+import { useState } from "react";
 
-export function Menu({
-  isOpen, selectedTabCallback
-}) {
+export function Menu({ isOpen, selectedTabCallback }) {
   const pathname = usePathname();
   const menuList = getMenuList(pathname);
+  const [activeTab, setActiveTab] = useState(null);
 
   const handleTabClick = (tabName) => {
     if (selectedTabCallback) {
       selectedTabCallback(tabName);
     }
+    setActiveTab(tabName);
   };
 
   return (
-    (<ScrollArea className="[&>div>div[style]]:!block">
+    <ScrollArea className="[&>div>div[style]]:!block">
       <nav className="mt-8 h-full w-full">
-        <ul
-          className="flex flex-col min-h-[calc(100vh-48px-36px-16px-32px)] lg:min-h-[calc(100vh-32px-40px-32px)] items-start space-y-1 px-2">
+        <ul className="flex flex-col min-h-[calc(100vh-48px-36px-16px-32px)] lg:min-h-[calc(100vh-32px-40px-32px)] items-start space-y-1 px-2">
           {menuList.map(({ groupLabel, menus }, index) => (
             <li className={cn("w-full", groupLabel ? "pt-5" : "")} key={index}>
               {(isOpen && groupLabel) || isOpen === undefined ? (
-                <p
-                  className="text-sm font-medium text-muted-foreground px-4 pb-2 max-w-[248px] truncate">
+                <p className="text-sm font-medium text-muted-foreground px-4 pb-2 max-w-[248px] truncate">
                   {groupLabel}
                 </p>
               ) : !isOpen && isOpen !== undefined && groupLabel ? (
@@ -55,58 +55,69 @@ export function Menu({
               ) : (
                 <p className="pb-2"></p>
               )}
-              {menus.map(({ href, label, icon: Icon, active, submenus }, index) =>
-                !submenus || submenus.length === 0 ? (
-                  <div className="w-full" key={index}>
-                    <TooltipProvider disableHoverableContent>
-                      <Tooltip delayDuration={100}>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant={
-                              (active === undefined &&
-                                pathname.startsWith(href)) ||
-                              active
-                                ? "secondary"
-                                : "ghost"
-                            }
-                            className="w-full justify-start h-10 mb-1"
-                            asChild
-                            onClick={() => handleTabClick(label)}>
-                            <Link href={href}>
-                              <span className={cn(isOpen === false ? "" : "mr-4")}>
-                                <Icon size={18} />
-                              </span>
-                              <p
-                                className={cn("max-w-[200px] truncate", isOpen === false
-                                  ? "-translate-x-96 opacity-0"
-                                  : "translate-x-0 opacity-100")}>
-                                {label}
-                              </p>
-                            </Link>
-                          </Button>
-                        </TooltipTrigger>
-                        {isOpen === false && (
-                          <TooltipContent side="right">
-                            {label}
-                          </TooltipContent>
-                        )}
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                ) : (
-                  <div className="w-full" key={index}>
-                    <CollapseMenuButton
-                      icon={Icon}
-                      label={label}
-                      active={
-                        active === undefined
-                          ? pathname.startsWith(href)
-                          : active
-                      }
-                      submenus={submenus}
-                      isOpen={isOpen} />
-                  </div>
-                ))}
+              {menus.map(
+                ({ href, label, icon: Icon, active, submenus }, index) =>
+                  !submenus || submenus.length === 0 ? (
+                    <div className="w-full" key={index}>
+                      <TooltipProvider disableHoverableContent>
+                        <Tooltip delayDuration={100}>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant={
+                                (active === undefined &&
+                                  pathname.startsWith(href)) ||
+                                active ||
+                                label === activeTab
+                                  ? "destructive"
+                                  : "ghost"
+                              }
+                              className="w-full justify-start h-10 mb-1 rounded-md px-3" // Adjusted padding and added rounded corners
+                              asChild
+                              onClick={() => handleTabClick(label)}
+                            >
+                              <Link href={href}>
+                                <span
+                                  className={cn(isOpen === false ? "" : "mr-4")}
+                                >
+                                  <Icon size={18} />
+                                </span>
+                                <p
+                                  className={cn(
+                                    "max-w-[200px] truncate font-medium", // Added font-medium for emphasis
+                                    isOpen === false
+                                      ? "-translate-x-96 opacity-0"
+                                      : "translate-x-0 opacity-100"
+                                  )}
+                                >
+                                  {label}
+                                </p>
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          {isOpen === false && (
+                            <TooltipContent side="right">
+                              {label}
+                            </TooltipContent>
+                          )}
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  ) : (
+                    <div className="w-full" key={index}>
+                      <CollapseMenuButton
+                        icon={Icon}
+                        label={label}
+                        active={
+                          active === undefined
+                            ? pathname.startsWith(href)
+                            : active
+                        }
+                        submenus={submenus}
+                        isOpen={isOpen}
+                      />
+                    </div>
+                  )
+              )}
             </li>
           ))}
           <li className="w-full grow flex items-end">
@@ -118,7 +129,7 @@ export function Menu({
                     variant="outline"
                     className="w-full justify-center h-10 mt-5">
                     <span className={cn(isOpen === false ? "" : "mr-4")}>
-                      <Lollipop size={18} />
+                      <MoonIcon size={18} />
                     </span>
                   </Button>
                 </TooltipTrigger>
@@ -130,6 +141,6 @@ export function Menu({
           </li>
         </ul>
       </nav>
-    </ScrollArea>)
+    </ScrollArea>
   );
 }
